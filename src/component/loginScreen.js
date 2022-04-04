@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput } from 'react-native'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setName } from "../redux/dataSlice";
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -30,7 +30,10 @@ const LoginScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
-        {/* isifooter */}
+        <TouchableOpacity onPress={() => navigation.push('Regis')} >
+          <Text>Don't have an account yet? Create Account</Text>
+        </TouchableOpacity>
+        <Text style={{marginTop:10}}>Copyright © #INDOPRIDE</Text>
       </View>
     </View>
   )
@@ -61,6 +64,8 @@ const styles = StyleSheet.create({
   footer: {
     height:'10%',
     backgroundColor:'#20CE65',
+    alignItems:'center',
+    justifyContent:'center'
   },
   textLogin: {
     color:'white',

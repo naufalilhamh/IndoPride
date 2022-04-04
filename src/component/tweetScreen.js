@@ -1,24 +1,15 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-native-easy-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import Accordian from './accordion';
 const baseUrl = 'https://indopride.id/api/status.json';
-const homeScreen = ({route, navigation}) => {
-  const dispatch = useDispatch()
-  const [ menu ] = useState(
-      { 
-        title: 'Jumlah Pemain Online pada Server #INDOPRIDE', 
-        data: 'Ini Jawabah pertanyaan pertama.',
-      }
-  )
+const TweetScreen = ({route, navigation}) => {
+
   const [loading, setLoading] = useState(true);
   const [dataIngame, setDataIngame] = useState([]);
-  const name = useSelector((state) => state.data.name);
-  console.log(useSelector((state) => state.data));
+
   useEffect(() => {
-    // code to run on component mount
     axios.get(`${baseUrl}`).then((response) => {
       setDataIngame(response.data);
       setLoading(false)
@@ -28,17 +19,14 @@ const homeScreen = ({route, navigation}) => {
     })
   }, [])
 
-  const renderAccordians = () => {
-    let isiData = {
-      players: dataIngame.kota.players,
-      ems: dataIngame.kota.ems,
-      pedagang: dataIngame.kota.pedagang,
-      mekanik: dataIngame.kota.mekanik
-    }
-    let title = menu.title.concat(' = '+dataIngame.kota.players);
-    return (
-     <Accordian  title = {title} data = {isiData}  />
-    )
+  const listTweet = () => {
+    const listTweet = dataIngame.website.twitter.map((value) =>
+        <View style={{ borderColor: 'black',borderBottomWidth:1, height:'auto', width:'100%', paddingHorizontal:10, paddingVertical:5}}>
+            <Text style={styles.textTweet}>"{value.message}"</Text>
+            <Text style={styles.textTweet}>- {value.author}</Text>
+        </View>
+    );
+        return listTweet
   }
   return (
     <View style={styles.container}>
@@ -46,16 +34,16 @@ const homeScreen = ({route, navigation}) => {
         {/* isiheader */}
       </View>
       <View style={styles.body}>
-        <Text style={styles.textLogin}>Selamat Datang, {name}</Text>
+        <Text style={styles.textLogin}>Tweet #INDOPRIDE Server</Text>
         { loading ? 
         <Text style={styles.textLogin}>Sedang Memuat Data ...</Text>
         : 
           <>
-          <View style={{marginTop:20}}>
-            <Text style={styles.textLogin}>Berikut Data Server Indopride</Text>
-          </View>
-          <View style={{height:'auto', width:'90%', marginTop:10}}>{renderAccordians()}</View>
-          
+          <SafeAreaView style={{height:'95%', width:'90%',}}>
+            <ScrollView style={styles.scrollView}>
+              { dataIngame.website.twitter ? listTweet() : null}
+            </ScrollView>
+          </SafeAreaView>
           </>
         }
       </View>
@@ -95,7 +83,7 @@ const homeScreen = ({route, navigation}) => {
   )
 }
 
-export default homeScreen
+export default TweetScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -109,7 +97,7 @@ const styles = StyleSheet.create({
     height: '85%',
     backgroundColor: '#19232B',
     alignItems:'center',
-    // justifyContent:'center'
+    paddingTop:20
   },
   logo: {
     width: 107,
@@ -137,12 +125,13 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   scrollView: {
-    backgroundColor: 'pink',
+    backgroundColor: '#FCF4F4',
     marginTop:10,
     height:'30%',
     borderRadius:10
   },
-  text: {
-    fontSize: 42,
-  },
+  textTweet:{
+      color:'black',
+      fontSize:15
+  }
 })

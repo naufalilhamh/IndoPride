@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    name: ''
+    name: '',
+    regisData: null
 };
 
 export const dataSlice = createSlice({
@@ -10,11 +11,14 @@ export const dataSlice = createSlice({
     reducers: {
         setName: (state, action) => {
             state.name = action.payload;
+        },
+        setRegister: (state, action) => {
+            state.regisData = action.payload;
         }
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setName } = dataSlice.actions;
+export const { setName, setRegister } = dataSlice.actions;
 
 export default dataSlice.reducer;
